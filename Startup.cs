@@ -26,6 +26,7 @@ namespace Electronics_market_backend
         {
             services.AddControllers();
 
+            // Enable CORS
             services.AddCors(options =>
             {
                 options.AddPolicy("EnableCORS", builder =>
@@ -42,6 +43,8 @@ namespace Electronics_market_backend
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("EnableCORS");
 
             app.UseRouting();
 
