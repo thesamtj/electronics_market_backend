@@ -39,7 +39,7 @@ namespace Electronics_market_backend.Controllers
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRolesAsync(user, "Customer");
+                await _userManager.AddToRoleAsync(user, "Customer");
 
                 // Sending Confirmation Email
 
