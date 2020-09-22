@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using Electronics_market_backend.Helpers;
 using Electronics_market_backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Electronics_market_backend.Controllers
 {
@@ -15,11 +19,13 @@ namespace Electronics_market_backend.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly AppSettings _appSettings;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IOptions<AppSettings> appSettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _appSettings = appSettings.Value;
         }
 
         [HttpPost("action")]
@@ -61,6 +67,56 @@ namespace Electronics_market_backend.Controllers
 
             return BadRequest(new JsonResult(errorList));
         }
+
+        // Login Method
+        [HttpPost("action")]
+        public async Task<IActionResult> Login([FromBody] LoginViewModel formData)
+        {
+            // Get user from Database
+            var user = await _userManager.FindByNameAsync(formData.UserName);
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secrets));
+
+            double tokenExpiryTime = Convert.ToDouble(_appSettings.ExpireTime);
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, formData.Password))
+            {
+                // Confirmation of Email
+                var tokenHandler = new JwtSecuritytokenHandler();
+
+                var tokenDescriptor = new JwtSecurityDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(JwtRegisteredClaimNames.Sub, formData.UserName),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString(),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id),
+                        new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
+                        new Claim("LoggedOn", DateTime.Now.ToString())
+                    }
+                    ),
+
+                    SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
+                    Issuer = _appSettings.Site,
+                    Audience = _appSettings.Audience,
+                    Expires = DateTime.UtcNow.AddMinutes(tokenExpiryTime)
+
+                };
+
+                // Generate Token
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+
+                return Ok(new { token = tokenHandler.WriteToken(token), expiration = token.ValidTo, userName = user.UserName, userRole = roles.FirstOrDefault() });
+            }
+
+            // return error
+            ModelState.AddModelError("", "Username/Password was not Found");
+            return Unauthorized(new { LoginError = "Please Check the Login Credentials - Invalid Username/Password was entered" });
+        }
+
+
 
     }
 }
