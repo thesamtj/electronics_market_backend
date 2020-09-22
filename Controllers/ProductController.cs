@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Electronics_market_backend.Data;
 using Electronics_market_backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,7 +30,7 @@ namespace Electronics_market_backend.Controllers
             return Ok(_db.Products.ToList());
         }
 
-        
+
         // POST api/<ProductController>
         [HttpPost("[action]")]
         public async Task<IActionResult> AddProduct([FromBody] ProductViewModel formData)
@@ -51,15 +52,40 @@ namespace Electronics_market_backend.Controllers
         }
 
         // PUT api/<ProductController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("[action]")]
+        public async Task<IActionResult> UpdateProductt([FromRoute] int id, [FromBody] ProductViewModel formData)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var findProduct = _db.Products.FirstOrDefault(p => p.ProductId == id);
+
+            if (findProduct == null)
+            {
+                return NotFound();
+            }
+
+            // if product was found
+            findProduct.Name = formData.Name;
+            findProduct.ImageUrl = formData.ImageUrl;
+            findProduct.Description = formData.Description;
+            findProduct.OutOfStock = formData.OutOfStock;
+            findProduct.Price = formData.Price;
+
+            _db.Entry(findProduct).State = EntityState.Modified;
+
+            await _db.SaveChangesAsync();
+
+            return Ok(new JsonResult("The Product with id" + id + "is updated"));
         }
 
         // DELETE api/<ProductController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("[action]")]
+        async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
+
         }
     }
 }
