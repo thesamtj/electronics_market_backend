@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Electronics_market_backend.Data;
 using Electronics_market_backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,7 @@ namespace Electronics_market_backend.Controllers
 
         // GET: api/<ProductController>
         [HttpGet("[action]")]
+        [Authorize(Policy = "RequireLoggedIn")]
         public IActionResult GetProducts()
         {
             return Ok(_db.Products.ToList());
@@ -33,6 +35,7 @@ namespace Electronics_market_backend.Controllers
 
         // POST api/<ProductController>
         [HttpPost("[action]")]
+        [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> AddProduct([FromBody] ProductViewModel formData)
         {
             var newproduct = new ProductViewModel
@@ -53,6 +56,7 @@ namespace Electronics_market_backend.Controllers
 
         // PUT api/<ProductController>/5
         [HttpPut("[action]")]
+        [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> UpdateProductt([FromRoute] int id, [FromBody] ProductViewModel formData)
         {
             if (!ModelState.IsValid)
@@ -83,6 +87,7 @@ namespace Electronics_market_backend.Controllers
 
         // DELETE api/<ProductController>/5
         [HttpDelete("[action]")]
+        [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
             if (!ModelState.IsValid)

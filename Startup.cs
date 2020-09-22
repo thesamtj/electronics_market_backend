@@ -88,6 +88,21 @@ namespace Electronics_market_backend
 
                 };
             });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireLoggedIn", policy => policy.RequireRole("Admin", "Customer", "Moderator").RequireAuthenticatedUser());
+
+                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
+            });
+
+            /*
+            Requirement: 
+            User should be Authenticated
+            User Must be Authorized.
+            In Order to view products (GetAllProducts).
+            */
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
