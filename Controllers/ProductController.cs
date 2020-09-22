@@ -83,9 +83,28 @@ namespace Electronics_market_backend.Controllers
 
         // DELETE api/<ProductController>/5
         [HttpDelete("[action]")]
-        async Task<IActionResult> DeleteProduct([FromRoute] int id)
+        public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            // find the product
+
+            var findProduct = _db.Products.FindAsync(id);
+
+            if (findProduct == null)
+            {
+                return NotFound();
+            }
+
+            _db.Products.Remove(findProduct);
+
+            await _db.SaveChangesAsync();
+
+            // Finally return the result to the client
+            return Ok(new JsonResult("The Product with id" + id + " is Deleted."));
         }
     }
 }
