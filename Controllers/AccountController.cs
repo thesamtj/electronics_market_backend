@@ -28,7 +28,7 @@ namespace Electronics_market_backend.Controllers
             _appSettings = appSettings.Value;
         }
 
-        [HttpPost("action")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Register([FromBody] RegistrationViewModel formData)
         {
             // Will hold all the errors related to registration
@@ -69,7 +69,7 @@ namespace Electronics_market_backend.Controllers
         }
 
         // Login Method
-        [HttpPost("action")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel formData)
         {
             // Get user from Database
