@@ -55,7 +55,7 @@ namespace Electronics_market_backend.Controllers
         }
 
         // PUT api/<ProductController>/5
-        [HttpPut("[action]")]
+        [HttpPut("[action]/{id}")]
         [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> UpdateProductt([FromRoute] int id, [FromBody] ProductViewModel formData)
         {
@@ -86,7 +86,7 @@ namespace Electronics_market_backend.Controllers
         }
 
         // DELETE api/<ProductController>/5
-        [HttpDelete("[action]")]
+        [HttpDelete("[action]/{id}")]
         [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
