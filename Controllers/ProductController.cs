@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Electronics_market_backend.Data;
+using Electronics_market_backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,23 +23,31 @@ namespace Electronics_market_backend.Controllers
         }
 
         // GET: api/<ProductController>
-        [HttpGet]
+        [HttpGet("[action]")]
         public IActionResult GetProducts()
         {
             return Ok(_db.Products.ToList());
         }
 
-        // GET api/<ProductController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
+        
         // POST api/<ProductController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AddProduct([FromBody] ProductViewModel formData)
         {
+            var newproduct = new ProductViewModel
+            {
+                Name = formData.Name,
+                ImageUrl = formData.ImageUrl,
+                Description = formData.Description,
+                OutOfStock = formData.OutOfStock,
+                Price = formData.Price
+            };
+
+            await _db.Products.AddAsync(newproduct);
+
+            await _db.SaveChangesAsync();
+
+            return Ok();
         }
 
         // PUT api/<ProductController>/5
