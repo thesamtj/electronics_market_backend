@@ -97,7 +97,7 @@ namespace Electronics_market_backend.Controllers
 
             // find the product
 
-            var findProduct = _db.Products.FindAsync(id);
+            var findProduct = await _db.Products.FindAsync(id);
 
             if (findProduct == null)
             {
@@ -111,5 +111,10 @@ namespace Electronics_market_backend.Controllers
             // Finally return the result to the client
             return Ok(new JsonResult("The Product with id" + id + " is Deleted."));
         }
+
+
+
+
+
     }
 }
