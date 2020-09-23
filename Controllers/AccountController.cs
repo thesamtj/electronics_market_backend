@@ -110,7 +110,7 @@ namespace Electronics_market_backend.Controllers
                 // Generate Token
                 var token = tokenHandler.CreateToken(tokenDescriptor);
 
-                return Ok(new { token = tokenHandler.WriteToken(token), expiration = token.ValidTo, userName = user.UserName, userRole = roles.FirstOrDefault() });
+                return Ok(new { token = tokenHandler.WriteToken(token), expiration = token.ValidTo, username = user.UserName, userRole = roles.FirstOrDefault() });
             }
 
             // return error
