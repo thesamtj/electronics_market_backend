@@ -12,5 +12,9 @@ namespace Electronics_market_backend.Helpers
         public string Audience { get; set; }
         public string ExpireTime { get; set; }
         public string Secret { get; set; }
+
+        // Sendgrind
+        public string SendGridKey { get; set; }
+        public string SendGridUser { get; set; }
     }
 }
