@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Electronics_market_backend.Services
 {
-    public class SendGridEmailSender
+    public class SendGridEmailSender : IEmailSender
     {
         private readonly AppSettings _appSettings;
 
