@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Electronics_market_backend.Data;
+using Electronics_market_backend.Email;
 using Electronics_market_backend.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -32,6 +33,9 @@ namespace Electronics_market_backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // Email Sending Service
+            services.AddSendGridEmailSender();
 
             // Enable CORS
             services.AddCors(options =>
