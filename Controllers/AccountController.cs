@@ -77,8 +77,6 @@ namespace Electronics_market_backend.Controllers
             // Get user from Database
             var user = await _userManager.FindByNameAsync(formData.UserName);
 
-            var roles = await _userManager.GetRolesAsync(user);
-
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secret));
 
             double tokenExpiryTime = Convert.ToDouble(_appSettings.ExpireTime);
@@ -86,6 +84,9 @@ namespace Electronics_market_backend.Controllers
             if (user != null && await _userManager.CheckPasswordAsync(user, formData.Password))
             {
                 // Confirmation of Email
+
+                // get user Role
+                var roles = await _userManager.GetRolesAsync(user);
                 var tokenHandler = new JwtSecurityTokenHandler();
 
                 var tokenDescriptor = new SecurityTokenDescriptor
