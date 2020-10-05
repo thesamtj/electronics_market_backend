@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Electronics_market_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200921130159_InitialDb")]
-    partial class InitialDb
+    [Migration("20200929183234_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

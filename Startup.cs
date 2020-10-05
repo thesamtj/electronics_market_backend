@@ -42,7 +42,12 @@ namespace Electronics_market_backend
             {
                 options.AddPolicy("EnableCORS", builder =>
                 {
-                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials().Build();
+                    builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                    //.AllowCredentials()
+                    // .SetIsOriginAllowed(hostname => true);
                 });
             });
 

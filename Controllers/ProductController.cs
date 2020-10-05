@@ -57,7 +57,7 @@ namespace Electronics_market_backend.Controllers
         // PUT api/<ProductController>/5
         [HttpPut("[action]/{id}")]
         [Authorize(Policy = "RequireAdministratorRole")]
-        public async Task<IActionResult> UpdateProductt([FromRoute] int id, [FromBody] ProductViewModel formData)
+        public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductViewModel formData)
         {
             if (!ModelState.IsValid)
             {
